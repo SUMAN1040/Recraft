@@ -1,0 +1,152 @@
+# ==============================================================================
+# Comprehensive .gitignore for Recraft Platform
+# Covers: Next.js / Node.js, Python / Django, Hardhat / Solidity, IDEs, and OS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Environment Variables & Secrets (CRITICAL: Never commit credentials)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.cert
+*.keystore
+
+# ------------------------------------------------------------------------------
+# 2. Node.js & Next.js Frontend
+# ------------------------------------------------------------------------------
+node_modules/
+*/node_modules/
+.next/
+*/.next/
+out/
+build/
+dist/
+.turbo/
+.vercel/
+
+# Package Manager Logs & Locks (debug logs only)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts.bak
+
+# ------------------------------------------------------------------------------
+# 3. Python & Django Backend
+# ------------------------------------------------------------------------------
+# Bytecode & Caches
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Virtual Environments
+venv/
+env/
+.venv/
+*/venv/
+*/env/
+*/.venv/
+
+# Django Run-time Artifacts
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3
+staticfiles/
+media/
+*/media/generated/
+
+# Python Packaging & Distribution
+*.egg-info/
+dist/
+eggs/
+*.egg
+
+# ------------------------------------------------------------------------------
+# 4. Blockchain, Hardhat & Solidity
+# ------------------------------------------------------------------------------
+cache/
+*/cache/
+artifacts/
+*/artifacts/
+typechain/
+typechain-types/
+*/typechain-types/
+coverage/
+coverage.json
+.hardhat/
+
+# ------------------------------------------------------------------------------
+# 5. Operating System Junk
+# ------------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Icon
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ------------------------------------------------------------------------------
+# 6. IDEs & Code Editors
+# ------------------------------------------------------------------------------
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains (PyCharm, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Emacs
+*.swp
+*.swo
+*.swn
+*~
+\#*\#
+.\#*
+
+# ------------------------------------------------------------------------------
+# 7. Temporary & Log Files
+# ------------------------------------------------------------------------------
+*.log
+*.tmp
+*.temp
+.temp/
+tmp/

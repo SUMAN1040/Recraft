@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #0d0e12;
+    --foreground: #f3f4f6;
+  }
+}
+
+body {
+  background-color: #0d0e12;
+  color: #f3f4f6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Recraft Canvas Dot Grid Background */
+.canvas-grid {
+  background-color: #0d0e12;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+.canvas-grid-dense {
+  background-color: #111218;
+  background-image: radial-gradient(rgba(255, 92, 0, 0.18) 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+}
+
+/* Glassmorphism panels */
+.recraft-panel {
+  background: rgba(22, 23, 30, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.recraft-dock {
+  background: rgba(18, 19, 25, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 92, 0, 0.12);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111217;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2b36;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5c00;
+}
