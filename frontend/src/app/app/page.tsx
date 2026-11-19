@@ -60,6 +60,17 @@ export default function StudioCanvasPage() {
   const [activePalette, setActivePalette] = useState<string[]>(PRESET_PALETTES[0].colors);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [styleDropdownOpen, setStyleDropdownOpen] = useState<boolean>(false);
+  const [selectedProvider, setSelectedProvider] = useState<string>("recraft_local");
+  const [providerDropdownOpen, setProviderDropdownOpen] = useState<boolean>(false);
+
+  const AI_PROVIDERS = [
+    { id: "recraft_local", name: "Recraft V3 Vector", badge: "Native SVG" },
+    { id: "claude", name: "Anthropic Claude 3.5", badge: "SVG Coder" },
+    { id: "gemini", name: "Google Imagen 3 / Gemini", badge: "High Res" },
+    { id: "openai", name: "ChatGPT / DALL-E 3", badge: "Detailed" },
+    { id: "stability", name: "Stability AI SD3", badge: "Diffusion" },
+    { id: "replicate", name: "Replicate Flux.1", badge: "Fast" },
+  ];
 
   // Canvas elements
   const [elements, setElements] = useState<CanvasItem[]>([
@@ -115,6 +126,7 @@ export default function StudioCanvasPage() {
         style_preset: selectedStyle,
         aspect_ratio: aspectRatio,
         palette_colors: activePalette,
+        provider: selectedProvider,
       });
 
       // Place newly generated artwork side-by-side on canvas
@@ -511,6 +523,48 @@ export default function StudioCanvasPage() {
                           <span>{style.name}</span>
                         </div>
                         <span className="text-[10px] opacity-70">{style.palette.length} colors</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* AI Model Manager Provider Selector */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setProviderDropdownOpen(!providerDropdownOpen)}
+                className="flex items-center gap-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-bold text-cyan-400 hover:bg-cyan-500/20 transition-colors"
+              >
+                <Sliders className="h-3.5 w-3.5" />
+                <span>{AI_PROVIDERS.find((p) => p.id === selectedProvider)?.name}</span>
+                <ChevronDown className="h-3 w-3 text-cyan-400/70" />
+              </button>
+
+              {providerDropdownOpen && (
+                <div className="absolute bottom-full mb-2 left-0 w-72 rounded-2xl border border-white/10 bg-[#161720] p-2 shadow-2xl z-50">
+                  <div className="text-[10px] font-bold text-gray-400 uppercase px-2 py-1">
+                    AI Engine / Gateway
+                  </div>
+                  <div className="space-y-1 mt-1">
+                    {AI_PROVIDERS.map((prov) => (
+                      <button
+                        key={prov.id}
+                        onClick={() => {
+                          setSelectedProvider(prov.id);
+                          setProviderDropdownOpen(false);
+                        }}
+                        className={`w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors ${
+                          selectedProvider === prov.id
+                            ? "bg-cyan-500 text-black font-bold"
+                            : "hover:bg-white/10 text-gray-300"
+                        }`}
+                      >
+                        <span>{prov.name}</span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/40 text-gray-300">
+                          {prov.badge}
+                        </span>
                       </button>
                     ))}
                   </div>

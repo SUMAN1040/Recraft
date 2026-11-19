@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { StylePicker, RECRAFT_STYLES } from "@/components/StylePicker";
 import { PalettePicker, PRESET_PALETTES } from "@/components/PalettePicker";
 import { VectorComparisonSlider } from "@/components/VectorComparisonSlider";
+import { AdBanner } from "@/adsense";
 import { api, GenerationResponse } from "@/lib/api";
 import {
   Sparkles,
@@ -269,6 +270,11 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Responsive Google AdSense Banner */}
+        <div className="max-w-7xl mx-auto px-4 mt-8">
+          <AdBanner slotId="1111111111" format="horizontal" />
         </div>
       </section>
 

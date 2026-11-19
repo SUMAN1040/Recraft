@@ -35,6 +35,7 @@ export const api = {
     aspect_ratio?: string;
     palette_colors?: string[];
     negative_prompt?: string;
+    provider?: string;
   }): Promise<GenerationResponse> {
     const res = await fetch(`${API_BASE_URL}/ai/generate/`, {
       method: "POST",

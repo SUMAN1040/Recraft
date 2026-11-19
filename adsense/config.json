@@ -1,0 +1,20 @@
+{
+  "publisherId": "ca-pub-0000000000000000",
+  "testMode": true,
+  "enableAutoAds": true,
+  "enableAdBlockerNotice": true,
+  "enableGDPRConsent": true,
+  "adSlots": {
+    "landingTopBanner": "1111111111",
+    "landingBottomBanner": "2222222222",
+    "studioSidebar": "3333333333",
+    "inFeedCards": "4444444444",
+    "exportModalSponsor": "5555555555"
+  },
+  "dimensions": {
+    "banner": { "width": "728px", "height": "90px" },
+    "sidebar": { "width": "300px", "height": "250px" },
+    "inFeed": { "width": "100%", "height": "280px" }
+  }
+}
+

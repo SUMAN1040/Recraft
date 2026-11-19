@@ -1,0 +1,74 @@
+{
+  "active_image_provider": "recraft_local",
+  "active_llm_provider": "claude",
+  "fallback_chain": ["recraft_local", "gemini", "openai", "stability", "replicate"],
+  "providers": {
+    "recraft_local": {
+      "name": "Recraft V3 Vector Engine",
+      "model": "recraft-v3-vector",
+      "type": "vector",
+      "enabled": true,
+      "description": "Native geometric SVG vector synthesis, 100% offline, infinite resolution",
+      "requires_api_key": false
+    },
+    "openai": {
+      "name": "OpenAI (ChatGPT & DALL-E 3)",
+      "models": {
+        "image": "dall-e-3",
+        "chat": "gpt-4o",
+        "chat_fast": "gpt-4o-mini"
+      },
+      "type": "raster_and_llm",
+      "env_key": "OPENAI_API_KEY",
+      "enabled": true,
+      "description": "DALL-E 3 photorealism & GPT-4o design prompt expansion"
+    },
+    "claude": {
+      "name": "Anthropic Claude",
+      "models": {
+        "flagship": "claude-3-5-sonnet-20241022",
+        "smart": "claude-3-opus-20240229",
+        "fast": "claude-3-5-haiku-20241022"
+      },
+      "type": "svg_coder_and_llm",
+      "env_key": "ANTHROPIC_API_KEY",
+      "enabled": true,
+      "description": "Claude 3.5 Sonnet raw SVG vector coding & design reasoning"
+    },
+    "gemini": {
+      "name": "Google Gemini & Imagen",
+      "models": {
+        "image": "imagen-3.0-generate-002",
+        "chat": "gemini-1.5-pro",
+        "chat_fast": "gemini-1.5-flash"
+      },
+      "type": "multimodal_and_image",
+      "env_key": "GEMINI_API_KEY",
+      "enabled": true,
+      "description": "Google Imagen 3 image generation & Gemini 1.5 Pro multimodal analysis"
+    },
+    "stability": {
+      "name": "Stability AI",
+      "models": {
+        "flagship": "stable-diffusion-v3-medium",
+        "turbo": "sdxl-turbo"
+      },
+      "type": "image",
+      "env_key": "STABILITY_API_KEY",
+      "enabled": true,
+      "description": "Stable Diffusion 3 Ultra and SDXL generation"
+    },
+    "replicate": {
+      "name": "Replicate (Flux.1 & Community)",
+      "models": {
+        "flux_schnell": "black-forest-labs/flux-schnell",
+        "flux_dev": "black-forest-labs/flux-dev"
+      },
+      "type": "image",
+      "env_key": "REPLICATE_API_TOKEN",
+      "enabled": true,
+      "description": "Flux.1 open weights state-of-the-art text-to-image"
+    }
+  }
+}
+

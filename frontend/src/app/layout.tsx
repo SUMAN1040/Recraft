@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AdSenseScript, PrivacyConsentModal, AdBlockerDetector } from "@/adsense";
 
 export const metadata: Metadata = {
   title: "Recraft.ai • The Infinite AI Canvas for Vector & 3D Art",
@@ -17,7 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-[#0d0e12] text-white antialiased">{children}</body>
+      <head>
+        <AdSenseScript />
+      </head>
+      <body className="bg-[#0d0e12] text-white antialiased">
+        {children}
+        <PrivacyConsentModal />
+        <AdBlockerDetector />
+      </body>
     </html>
   );
 }

@@ -1,3 +1,5 @@
+import sys
+from pathlib import Path
 from datetime import datetime
 from rest_framework import status
 from rest_framework.views import APIView
@@ -7,10 +9,16 @@ from .models import GenerationJob
 from .serializers import GenerationJobSerializer
 from .generator import RecraftAIGenerator, eth_sign_hash, STYLE_PALETTES
 
+# Connect unified AI Models Gateway
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.append(str(PROJECT_ROOT))
+from ai_models.manager import ai_manager
+
 class GenerateArtworkView(APIView):
     """
     POST /api/ai/generate/
     Initiates AI design synthesis in requested style (vector_art, 3d_render, etc.)
+    Routes to selected AI provider (Recraft Local, Claude, Gemini, OpenAI, etc.)
     with custom palette and cryptographic provenance signature.
     """
     def post(self, request):
@@ -22,6 +30,7 @@ class GenerateArtworkView(APIView):
         aspect_ratio = request.data.get('aspect_ratio', '1:1')
         palette_colors = request.data.get('palette_colors', None)
         negative_prompt = request.data.get('negative_prompt', '')
+        provider = request.data.get('provider', None)
 
         # Create record
         job = GenerationJob.objects.create(
@@ -34,27 +43,32 @@ class GenerateArtworkView(APIView):
         )
 
         try:
-            result = RecraftAIGenerator.generate(
+            # Route request through AI Model Manager
+            result = ai_manager.generate_artwork(
                 prompt=prompt,
                 style_preset=style_preset,
                 aspect_ratio=aspect_ratio,
-                palette_colors=palette_colors
+                palette_colors=palette_colors,
+                preferred_provider=provider
             )
 
             # Generate Oracle cryptographic signature for Web3 provenance
             oracle_sig = eth_sign_hash(result['content_hash'], settings.ORACLE_PRIVATE_KEY)
 
             job.status = 'completed'
-            job.image_url = result['image_url']
-            job.svg_data = result['svg_content']
+            job.image_url = result.get('image_url', '')
+            job.svg_data = result.get('svg_content', '')
             job.content_hash = result['content_hash']
             job.prompt_hash = result['prompt_hash']
             job.oracle_signature = oracle_sig
+            job.model_version = result.get('model_version', 'recraft-v3-vector')
             job.completed_at = datetime.now()
             job.save()
 
             serializer = GenerationJobSerializer(job)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            res_data = serializer.data
+            res_data['routed_provider'] = result.get('routed_provider', 'recraft_local')
+            return Response(res_data, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             job.status = 'failed'
@@ -64,9 +78,6 @@ class GenerateArtworkView(APIView):
 
 
 class JobDetailView(APIView):
-    """
-    GET /api/ai/jobs/<id>/
-    """
     def get(self, request, pk):
         try:
             job = GenerationJob.objects.get(pk=pk)
@@ -77,10 +88,6 @@ class JobDetailView(APIView):
 
 
 class VectorizeImageView(APIView):
-    """
-    POST /api/ai/vectorize/
-    Recraft's hallmark feature: converts raster graphics into clean SVG vector code.
-    """
     def post(self, request):
         if 'image' in request.FILES:
             image_file = request.FILES['image']
@@ -102,10 +109,6 @@ class VectorizeImageView(APIView):
 
 
 class StylesListView(APIView):
-    """
-    GET /api/ai/styles/
-    Returns list of Recraft style presets with sample color palettes.
-    """
     def get(self, request):
         styles = [
             {
@@ -162,3 +165,39 @@ class StylesListView(APIView):
             'styles': styles,
             'aspect_ratios': ['1:1', '16:9', '9:16', '4:3', '3:2'],
         })
+
+
+class ModelManagementView(APIView):
+    """
+    GET /api/ai/models/ -> Lists Claude, Gemini, ChatGPT/OpenAI, Stability, Replicate, Recraft
+    POST /api/ai/models/ -> Updates active model or switches provider
+    """
+    def get(self, request):
+        models = ai_manager.list_all_models()
+        return Response({
+            "active_image_provider": ai_manager.config.get("active_image_provider"),
+            "active_llm_provider": ai_manager.config.get("active_llm_provider"),
+            "providers": models
+        })
+
+    def post(self, request):
+        image_provider = request.data.get("active_image_provider")
+        llm_provider = request.data.get("active_llm_provider")
+        ai_manager.set_active_provider(image_provider=image_provider, llm_provider=llm_provider)
+        return Response({
+            "success": True,
+            "active_image_provider": ai_manager.config.get("active_image_provider"),
+            "active_llm_provider": ai_manager.config.get("active_llm_provider")
+        })
+
+
+class EnhancePromptView(APIView):
+    """
+    POST /api/ai/enhance-prompt/ -> Uses Claude / Gemini / ChatGPT to expand design prompts
+    """
+    def post(self, request):
+        prompt = request.data.get("prompt", "")
+        style_preset = request.data.get("style_preset", "vector_art")
+        preferred_llm = request.data.get("llm", None)
+        enhanced = ai_manager.enhance_prompt(prompt, style_preset=style_preset, preferred_llm=preferred_llm)
+        return Response({"original": prompt, "enhanced": enhanced})
